@@ -15,7 +15,7 @@ class load {
 	static String user="root";
 	static String pass="";
 	static Scanner scan;
-	static Statement st,st1;
+	static Statement st,st1,st2;
 	static ResultSet rs;
 	
 	public static  void combine() throws ClassNotFoundException, SQLException
@@ -42,7 +42,7 @@ class load {
 			{
 				System.out.println("\nStudent found in the system");	
 				
-				System.out.println("\nDo you wish to load money on rollnumber : "+rollnumb+"?"
+				System.out.println("\nDo you wish to load money on rollnumber : "+rollnumb+ "?"
 						+ "\nPress 1 to load or 0 to cancel transaction ");
 				
 				int num =scan.nextInt();
@@ -55,6 +55,10 @@ class load {
 					PreparedStatement st1 = con.prepareStatement("Update student_recharge set balance=((balance+?)) where rollno='"+rollnumb+"'");
 					st1.setInt(1, recharge);
 					st1.executeUpdate();
+					
+					PreparedStatement st2 = con.prepareStatement("Update sales set balance=((balance+?)) where rollno='"+rollnumb+"'");
+					st2.setInt(1, recharge);
+					st2.executeUpdate();
 					
 					System.out.println("Account has been loaded with "+recharge+"/=");
 				}
