@@ -31,52 +31,56 @@ class load {
 		{
 			
 			combine();
-			System.out.println("Enter the rollnumber : ");
-			int rollnumb= scan.nextInt();
-			
-			st=con.createStatement();
-			rs = st.executeQuery("select * from student_recharge where rollno='"+rollnumb+"'");
-			rs.next();
-			
-			if(rs.getRow()>0)
+			int nxt=1;
+			while(nxt==1)
 			{
-				System.out.println("\nStudent found in the system");	
+				System.out.println("Enter the rollnumber : ");
+				int rollnumb= scan.nextInt();
 				
-				System.out.println("\nDo you wish to load money on rollnumber : "+rollnumb+ "?"
-						+ "\nPress 1 to load or 0 to cancel transaction ");
+				st=con.createStatement();
+				rs = st.executeQuery("select * from student_recharge where rollno='"+rollnumb+"'");
+				rs.next();
 				
-				int num =scan.nextInt();
-				if(num==1)
+				if(rs.getRow()>0)
 				{
+					System.out.println("\nStudent found in the system");	
 					
-					System.out.println("\nEnter the amount you want to load");
-					int recharge=scan.nextInt();
+					System.out.println("\nDo you wish to load money on rollnumber : "+rollnumb+ "?"
+							+ "\nPress 1 to load or 0 to cancel transaction ");
 					
-					PreparedStatement st1 = con.prepareStatement("Update student_recharge set balance=((balance+?)) where rollno='"+rollnumb+"'");
-					st1.setInt(1, recharge);
-					st1.executeUpdate();
+					int num =scan.nextInt();
+					if(num==1)
+					{
+						
+						System.out.println("\nEnter the amount you want to load");
+						int recharge=scan.nextInt();
+						
+						PreparedStatement st1 = con.prepareStatement("Update student_recharge set balance=((balance+?)) where rollno='"+rollnumb+"'");
+						st1.setInt(1, recharge);
+						st1.executeUpdate();
+						
+						PreparedStatement st2 = con.prepareStatement("Update sales set balance=((balance+?)) where rollno='"+rollnumb+"'");
+						st2.setInt(1, recharge);
+						st2.executeUpdate();
+						
+						System.out.println("\nAccount has been loaded with "+recharge+"/=");
+						 
+					}
+					else if(num==0)
+					{
+						System.out.println("\nThe transaction is cancelled");
+					}
 					
-					PreparedStatement st2 = con.prepareStatement("Update sales set balance=((balance+?)) where rollno='"+rollnumb+"'");
-					st2.setInt(1, recharge);
-					st2.executeUpdate();
-					
-					System.out.println("Account has been loaded with "+recharge+"/=");
+					else
+					{
+						System.out.println("\nInvalid selection, chose either 1 to continue or 0 to cancel transaction");
+					}
 				}
-				else if(num==0)
-				{
-					System.out.println("\nThe transaction is cancelled");
-				}
-				
 				else
-				{
-					System.out.println("\nInvalid selection, chose either 1 to continue or 0 to cancel transaction");
-				}
+				{	
+					System.out.println("\nThe student not found in the system !!!");
+				}	
 			}
-			else
-			{	
-				System.out.println("\nThe student not found in the system !!!");
-			}
-			
 		}
 	}	
 }
